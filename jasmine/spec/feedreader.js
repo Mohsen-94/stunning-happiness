@@ -32,8 +32,7 @@ $(
        */
       it('have non-empty URLs', () => {
         allFeeds.forEach(feed => {
-          expect(feed.url).toBeDefined();
-          expect(feed.url).not.toBe('');
+          expect(feed.url).toBeTruthy();
         });
       });
       /* a test that loops through each feed
@@ -42,8 +41,7 @@ $(
        */
       it('have non-empty names', () => {
         allFeeds.forEach(feed => {
-          expect(feed.name).toBeDefined();
-          expect(feed.name).not.toBe('');
+          expect(feed.name).toBeTruthy();
         });
       });
     });
@@ -88,7 +86,9 @@ $(
       });
 
       it('should have a minimum of one entry', () => {
-        expect(document.querySelectorAll('.entry').length).toBeGreaterThan(0);
+        expect(
+          document.querySelectorAll('.feed .entry').length
+        ).toBeGreaterThan(0);
       });
     });
     /*New test suite named "New Feed Selection" */
