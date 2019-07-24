@@ -74,43 +74,34 @@ $(
        * function is called and completes its work, there is at least
        * a single .entry element within the .feed container.
        */
-      beforeEach(() => {
-        return new Promise(function(resolve, reject) {
-          // do something asynchronous
-          loadFeed(0, resolve);
-        });
+
+      /*
+       * async await function will pause execution untill the asynchronous function loadFeed() resolves
+       * no need for callbacks and done()
+       * from the jasmine doc page:
+       * "Jasmine will wait until the returned promise is either resolved or rejected
+       * before moving on to the next thing in the queue."
+       * https://jasmine.github.io/tutorials/async
+       */
+      beforeEach(async () => {
+        await loadFeed(0);
       });
 
       it('should have a minimum of one entry', () => {
-        expect(document.querySelector('.feed').children.length).toBeGreaterThan(
-          0
-        );
+        expect(document.querySelectorAll('.entry').length).toBeGreaterThan(0);
       });
     });
     /*New test suite named "New Feed Selection" */
     describe('New Feed Selection', () => {
       let firstFeed, secondFeed;
-      const feed = document.querySelector('.feed');
       /* a test that ensures when a new feed is loaded
        * by the loadFeed function that the content actually changes.
        */
-      beforeEach(() => {
-        return new Promise(function(resolve, reject) {
-          // promise based solution for testing async loadFeed()
-          loadFeed(0, () => {
-            firstFeed = feed.innerText;
-            resolve();
-          });
-        });
-      });
-      beforeEach(() => {
-        return new Promise(function(resolve, reject) {
-          // promise based solution for testing async loadFeed()
-          loadFeed(1, () => {
-            secondFeed = feed.innerText;
-            resolve();
-          });
-        });
+
+      //Promise.all only resolves when all passed promises resolve
+      //Using array destructing to store the feeds' text content as it is what the promise resolves with.
+      beforeEach(async () => {
+        [firstFeed, secondFeed] = await Promise.all([loadFeed(0), loadFeed(1)]);
       });
 
       it('content changes when new feed is loaded', () => {
